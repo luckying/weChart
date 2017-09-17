@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>weChat</title>
+  <script src="socket.io.js"></script>
+</head>
+
+<body>
+  <h1>WeChat</h1>
+  <input type="text" id="sendTxt">
+  <button id="sendBtn">发送</button>
+  <script>
+    var socket = io("http://120.77.81.183:8001/")
+
+    function showMessage(str, type) {
+      var oDiv = document.createElement("div")
+      oDiv.innerHTML = str
+      if (type == "enter") {
+        oDiv.style.color = "blue"
+      }
+      if (type == "leave") {
+        oDiv.style.color = "red"
+      }
+      if (type == "message") {
+        oDiv.style.color = "orange"
+      }
+      document.body.appendChild(oDiv)
+    }
+
+    document.getElementById("sendBtn").onclick = function () {
+      var txt = document.getElementById("sendTxt").value
+      if (txt) {
+        socket.emit('message',txt)
+      }
+    }
+    socket.on('enter',function(data){
+      showMessage(data,'enter')
+    })
+    socket.on('message',function(data){
+      showMessage(data,'message')
+    })
+    socket.on('leave',function(data){
+      showMessage(data,'leave')
+    })
+  </script>
+</body>
+
+</html>
